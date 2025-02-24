@@ -6,16 +6,15 @@ from auth_app.models import User
 from .serializers import RegistrationSerializer
 
 class RegistrationView(generics.CreateAPIView):
-    queryset = User.objects.all()
     serializer_class = RegistrationSerializer
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            token, create = Token.objects.get_or_create(user=user)
+            token, _ = Token.objects.get_or_create(user=user)
             return Response({
-                'token': Token.key,
+                'token': token.key,
                 'username': user.username,
                 'email': user.email,
                 'user_id': user.id
