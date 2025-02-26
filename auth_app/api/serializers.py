@@ -24,5 +24,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
         validated_data.pop('repeated_password')
         user_type = validated_data.pop('type')
         user = User.objects.create_user(**validated_data)
+        UserProfile.objects.create(user=user, type=user_type)
         Token.objects.create(user=user)
         return user
