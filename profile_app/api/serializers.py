@@ -37,4 +37,28 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-    
+class BusinessProfileSerializer(UserProfileSerializer):
+    class Meta:
+        model = UserProfile
+        fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'file',
+            'location',
+            'tel',
+            'description',
+            'working_hours',
+            'type',
+        ]
+
+class CustomerProfileSerializer(UserProfileSerializer):
+    class Meta:
+        model = UserProfile
+        fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'file',
+            'type',
+        ]
