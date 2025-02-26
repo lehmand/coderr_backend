@@ -10,3 +10,5 @@ class UserProfile(models.Model):
     ]    
 
     type = models.CharField(max_length=20, choices=PROFILE_TYPES)
+
+

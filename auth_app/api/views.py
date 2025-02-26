@@ -22,7 +22,6 @@ class RegistrationView(generics.CreateAPIView):
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
     
 class CustomAuthToken(ObtainAuthToken):
-    
     def post(self, request):
         serializer = self.get_serializer(data=request.data, context={'request': request})
 
