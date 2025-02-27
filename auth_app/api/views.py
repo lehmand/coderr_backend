@@ -4,9 +4,11 @@ from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_2
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from .serializers import RegistrationSerializer
+from rest_framework.permissions import AllowAny
 
 class RegistrationView(generics.CreateAPIView):
     serializer_class = RegistrationSerializer
+    permission_classes = [AllowAny]
 
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -22,6 +24,7 @@ class RegistrationView(generics.CreateAPIView):
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
     
 class CustomAuthToken(ObtainAuthToken):
+    permission_classes = [AllowAny]
     def post(self, request):
         serializer = self.get_serializer(data=request.data, context={'request': request})
 
