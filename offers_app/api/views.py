@@ -13,7 +13,7 @@ class OfferListCreateView(generics.ListCreateAPIView):
 
 class SingleOfferView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Offer.objects.all()
-    serializer_class = SingleOfferSerializer
+    serializer_class = OfferCreateSerializer
 
 
 class OfferDetailView(generics.RetrieveAPIView):
