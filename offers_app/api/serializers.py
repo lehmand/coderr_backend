@@ -57,3 +57,23 @@ class OfferSerializer(serializers.ModelSerializer):
         for detail in details_data:
             OfferDetail.objects.create(offer=offer, **detail)
         return offer
+    
+class SingleOfferSerializer(OfferSerializer):
+
+    user = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
+    user_details = None
+    
+    class Meta:
+        model = Offer
+        fields = [
+            'id',
+            'user',
+            'title',
+            'image',
+            'description',
+            'created_at',
+            'updated_at',
+            'details',
+            'min_price',
+            'min_delivery_time',
+        ]
