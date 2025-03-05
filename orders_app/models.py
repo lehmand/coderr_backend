@@ -1,4 +1,5 @@
 from django.db import models
+from offers_app.models import Offer
 
 # Create your models here.
 class Order(models.Model):
