@@ -19,7 +19,7 @@ class OrderListSerializer(serializers.ModelSerializer):
         read_only_fields = [
             'id', 'customer_user', 'business_user', 'title', 'revisions',
             'delivery_time_in_days', 'price', 'features', 'offer_type',
-            'status', 'created_at', 'updated_at'
+            'created_at', 'updated_at'
         ]
 
     def create(self, validated_data):
@@ -47,5 +47,6 @@ class OrderListSerializer(serializers.ModelSerializer):
         if not OfferDetail.objects.filter(id=value).exists():
             raise serializers.ValidationError('OfferDetail with this ID does not exist.')
         return value
+    
 
 

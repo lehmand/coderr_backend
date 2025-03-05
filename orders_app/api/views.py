@@ -7,10 +7,9 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.db.models import Q
 
-class OrderListCreateView(generics.ListCreateAPIView):
-    queryset = Order.objects.all()
+class OrderListView(generics.ListCreateAPIView):
     serializer_class = OrderListSerializer
-    
+
     def get_queryset(self):
         user_id = self.request.user.id
         return Order.objects.filter(Q(customer_user=user_id) | Q(business_user=user_id))
@@ -21,3 +20,10 @@ class OrderListCreateView(generics.ListCreateAPIView):
         order = serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
+
+class OrderSingleView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderListSerializer
+
+    
+        
