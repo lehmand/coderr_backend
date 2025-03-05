@@ -25,5 +25,6 @@ class OrderSingleView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderListSerializer
 
+
     
         
