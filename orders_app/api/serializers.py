@@ -28,8 +28,8 @@ class ListOrderSerializer(serializers.ModelSerializer):
         offer = offer_detail.offer
 
         order = Order(
-            customer_user = self.context['request'].user.id,
-            business_user = offer.user.id,
+            customer_user = self.context['request'].user,
+            business_user = offer.user,
             title = offer_detail.title,
             revisions = offer_detail.revisions,
             delivery_time_in_days = offer_detail.delivery_time_in_days,
@@ -66,3 +66,7 @@ class SingleOrderSerializer(serializers.ModelSerializer):
         instance.status = validated_data.get('status', instance.status)
         instance.save()
         return instance
+
+
+
+
