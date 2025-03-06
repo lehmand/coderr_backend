@@ -3,12 +3,12 @@ from orders_app.models import Order
 from offers_app.models import OfferDetail
 from django.contrib.auth.models import User
 from profile_app.models import UserProfile
+from rest_framework.response import Response
 
 
-class OrderListSerializer(serializers.ModelSerializer):
+class ListOrderSerializer(serializers.ModelSerializer):
 
     offer_detail_id = serializers.IntegerField(write_only=True)
-
     class Meta:
         model = Order
         fields = [
@@ -48,4 +48,21 @@ class OrderListSerializer(serializers.ModelSerializer):
         return value
     
 
+class SingleOrderSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = Order
+        fields = '__all__'
+        read_only_fields = ['id']
+
+    def validate_status(self, value):
+        allowed_statuses = ['in_progress', 'complete', 'cancelled']
+
+        if value not in allowed_statuses:
+            return serializers.ValidationError(f'Status nicht erlaubt! Erlaubt: {allowed_statuses}')
+        return value
+
+    def update(self, instance, validated_data):
+        instance.status = validated_data.get('status', instance.status)
+        instance.save()
+        return instance

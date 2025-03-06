@@ -1,5 +1,5 @@
 from rest_framework import generics, status
-from .serializers import OrderListSerializer
+from .serializers import ListOrderSerializer, SingleOrderSerializer
 from orders_app.models import Order
 from offers_app.models import OfferDetail
 from rest_framework.response import Response
@@ -7,8 +7,8 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.db.models import Q
 
-class OrderListView(generics.ListCreateAPIView):
-    serializer_class = OrderListSerializer
+class ListOrderView(generics.ListCreateAPIView):
+    serializer_class = ListOrderSerializer
 
     def get_queryset(self):
         user_id = self.request.user.id
@@ -21,9 +21,9 @@ class OrderListView(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
-class OrderSingleView(generics.RetrieveUpdateDestroyAPIView):
+class SingleOrderView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.all()
-    serializer_class = OrderListSerializer
+    serializer_class = SingleOrderSerializer
 
 
     
