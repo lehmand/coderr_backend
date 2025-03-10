@@ -5,8 +5,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     username = serializers.CharField(source='user.username')
     email = serializers.EmailField(source='user.email')
-    first_name = serializers.CharField(source='user.first_name', default=None)
-    last_name = serializers.CharField(source='user.last_name', default=None)
+    first_name = serializers.CharField(source='user.first_name', default=None, allow_blank=True)
+    last_name = serializers.CharField(source='user.last_name', default=None, allow_blank=True)
     file = serializers.ImageField(required=False, allow_null=True)
     created_at = serializers.DateTimeField(source='user.date_joined', read_only=True)
     class Meta:

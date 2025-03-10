@@ -1,12 +1,9 @@
 from rest_framework import serializers
 from orders_app.models import Order
 from offers_app.models import OfferDetail
-from django.contrib.auth.models import User
-from profile_app.models import UserProfile
-from rest_framework.response import Response
 
 
-class ListOrderSerializer(serializers.ModelSerializer):
+class ListCreateOrderSerializer(serializers.ModelSerializer):
 
     offer_detail_id = serializers.IntegerField(write_only=True)
     class Meta:

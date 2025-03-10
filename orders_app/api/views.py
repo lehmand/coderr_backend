@@ -1,17 +1,16 @@
 from rest_framework import generics, status
-from rest_framework.permissions import IsAuthenticated
-from .serializers import ListOrderSerializer, SingleOrderSerializer
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from .serializers import ListCreateOrderSerializer, SingleOrderSerializer
+from .permissions import IsCustomer
 from orders_app.models import Order
-from offers_app.models import OfferDetail
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from django.utils import timezone
 from django.db.models import Q
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
+from offers_app.api.permissions import IsBusinessUser
 
-class ListOrderView(generics.ListCreateAPIView):
-    serializer_class = ListOrderSerializer
+class ListCreateOrderView(generics.ListCreateAPIView):
+    serializer_class = ListCreateOrderSerializer
 
     def get_queryset(self):
         user_id = self.request.user.id
@@ -23,10 +22,28 @@ class ListOrderView(generics.ListCreateAPIView):
         order = serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
+    def get_permissions(self):
+        
+        if self.request.method == 'POST':
+            permission_classes = [IsAuthenticated, IsCustomer]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+    
 
 class SingleOrderView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.all()
     serializer_class = SingleOrderSerializer
+
+    def get_permissions(self):
+        
+        if self.request.method == 'PATCH':
+            permission_classes = [IsAuthenticated, IsBusinessUser]
+        elif self.request.method == 'DELETE':
+            permission_classes = [IsAuthenticated, IsAdminUser]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
 
 class OrderCountView(APIView):
