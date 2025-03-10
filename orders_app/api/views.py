@@ -1,5 +1,5 @@
 from rest_framework import generics, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .serializers import ListCreateOrderSerializer, SingleOrderSerializer
 from .permissions import IsCustomer
 from orders_app.models import Order
@@ -37,8 +37,10 @@ class SingleOrderView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_permissions(self):
         
-        if self.request.method in ['PATCH']:
+        if self.request.method == 'PATCH':
             permission_classes = [IsAuthenticated, IsBusinessUser]
+        elif self.request.method == 'DELETE':
+            permission_classes = [IsAuthenticated, IsAdminUser]
         else:
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
