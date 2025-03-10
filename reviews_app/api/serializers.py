@@ -37,7 +37,7 @@ class ReviewSingleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ['id', 'business_user', 'reviewer', 'rating', 'description', 'created_at', 'updated_at']
-        read_only_fieds = ['id', 'business_user', 'reviewer', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'business_user', 'reviewer', 'created_at', 'updated_at']
 
     def update(self, instance, validated_data):
         instance.rating = validated_data.get('rating', instance.rating)

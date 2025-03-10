@@ -18,4 +18,4 @@ class UserProfile(models.Model):
     created_at = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.type
+        return self.user.first_name
