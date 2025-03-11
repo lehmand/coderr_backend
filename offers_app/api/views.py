@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
-from .serializers import OfferCreateSerializer, OfferListSerializer, OfferDetailSerializer, SingleOfferSerializer
+from .serializers import OfferCreateSerializer, OfferListSerializer, OfferDetailSerializer, SingleOfferSerializer, UpdateSerializer
 from .permissions import IsBusinessUser, IsCreator
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet, NumberFilter
 from offers_app.models import Offer, OfferDetail
@@ -35,7 +35,6 @@ class OfferListCreateView(generics.ListCreateAPIView):
 
 class SingleOfferView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Offer.objects.all()
-    serializer_class = SingleOfferSerializer
 
     def get_permissions(self):
         if self.request.method in ['PATCH', 'DELETE']:
@@ -43,6 +42,11 @@ class SingleOfferView(generics.RetrieveUpdateDestroyAPIView):
         else:
             permission_classes = [AllowAny]
         return [permission() for permission in permission_classes]
+    
+    def get_serializer_class(self):
+        if self.request.method == 'PATCH':
+            return UpdateSerializer
+        return SingleOfferSerializer
 
 
 class OfferDetailView(generics.RetrieveAPIView):

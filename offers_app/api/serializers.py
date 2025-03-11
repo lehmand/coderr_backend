@@ -93,3 +93,10 @@ class SingleOfferSerializer(OfferCreateSerializer):
         if details:
             return min(detail.delivery_time_in_days for detail in details)
         return None
+    
+class UpdateSerializer(SingleOfferSerializer):
+    user = None
+    details = OfferDetailSerializer(many=True, read_only=True)
+    class Meta:
+        model = Offer
+        fields = ['id', 'title', 'image', 'description', 'details']
