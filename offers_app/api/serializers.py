@@ -19,8 +19,8 @@ class OfferDetailSerializer(serializers.ModelSerializer):
 class OfferListSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
     details = OfferDetailNestedSerializer(many=True, read_only=True)
-    min_price = serializers.SerializerMethodField()
-    min_delivery_time = serializers.SerializerMethodField()
+    min_price = serializers.FloatField(read_only=True)
+    min_delivery_time = serializers.IntegerField(read_only=True)
     user_details = serializers.SerializerMethodField()
     class Meta:
         model = Offer
@@ -30,19 +30,19 @@ class OfferListSerializer(serializers.ModelSerializer):
             'min_price', 'min_delivery_time', 'user_details'
         ]
 
-    def get_min_price(self, obj):
-        details = obj.details.all()
+    def _update_min_values(self, offer, details_data):
+        min_price = None
+        min_delivery_time = None
 
-        if details:
-            return min(detail.price for detail in details)
-        return None
-    
-    def get_min_delivery_time(self, obj):
-        details = obj.details.all()
+        for detail_data in details_data:
+            detail = OfferDetail.objects.create(offer=offer, **detail_data)
+            min_price = min(min_price, detail.price) if min_price is not None else detail.price
+            min_delivery_time = min(min_delivery_time, detail.delivery_time_in_days) if min_delivery_time is not None else detail.delivery_time_in_days
 
-        if details:
-            return min(detail.delivery_time_in_days for detail in details)
-        return None
+        offer.min_price = min_price if min_price is not None else 0.0
+        offer.min_delivery_time = min_delivery_time if min_delivery_time is not None else 7
+        offer.save(update_fields=['min_price', 'min_delivery_time'])
+
     
     def get_user_details(self, obj):
         user = obj.user
