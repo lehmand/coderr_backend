@@ -4,9 +4,9 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from .serializers import OfferCreateSerializer, OfferListSerializer, OfferDetailSerializer, SingleOfferSerializer, UpdateSerializer
 from .permissions import IsBusinessUser, IsCreator
-from django_filters.rest_framework import DjangoFilterBackend, FilterSet, NumberFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from offers_app.models import Offer, OfferDetail
-from django.db.models import Min
+from .filters import OfferFilter
 
 
 class OfferListPagination(PageNumberPagination):
@@ -19,6 +19,7 @@ class OfferListCreateView(generics.ListCreateAPIView):
     ordering_fields = ['updated_at', 'min_price']
     search_fields = ['title', 'description']
     pagination_class = OfferListPagination
+    filterset_class = OfferFilter
 
     def get_serializer_class(self):
         if self.request.method == 'GET':

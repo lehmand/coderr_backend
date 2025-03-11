@@ -19,7 +19,7 @@ class OfferDetailSerializer(serializers.ModelSerializer):
 class OfferListSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
     details = OfferDetailNestedSerializer(many=True, read_only=True)
-    min_price = serializers.FloatField(read_only=True)
+    min_price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     min_delivery_time = serializers.IntegerField(read_only=True)
     user_details = serializers.SerializerMethodField()
     class Meta:
