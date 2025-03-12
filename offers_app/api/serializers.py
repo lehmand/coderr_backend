@@ -1,7 +1,5 @@
 from rest_framework import serializers
 from offers_app.models import Offer, OfferDetail
-from django.contrib.auth.models import User
-from profile_app.models import UserProfile
 
 class OfferDetailNestedSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -11,7 +9,6 @@ class OfferDetailNestedSerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {
             'url': {'view_name': 'offer-detail'}
         }
-
 class OfferDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = OfferDetail
