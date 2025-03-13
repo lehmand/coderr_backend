@@ -9,7 +9,7 @@ class UserProfile(models.Model):
         ('customer', 'Kundenprofil'),
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)    
-    file = models.FileField(upload_to=None)
+    file = models.ImageField(upload_to='images/', blank=True, null=True)
     location = models.CharField(max_length=200, blank=True)
     tel = models.IntegerField(null=True)
     description = models.CharField(max_length=200, blank=True)

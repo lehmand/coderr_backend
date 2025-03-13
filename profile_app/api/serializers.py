@@ -35,12 +35,19 @@ class UserProfileSerializer(serializers.ModelSerializer):
         user.save()
 
         return super().update(instance, validated_data)
+    
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        if rep.get('file'):
+            rep['file'] = instance.file.url
+        return rep
 
 
 class BusinessProfileSerializer(UserProfileSerializer):
     class Meta:
         model = UserProfile
         fields = [
+            'user',
             'username',
             'first_name',
             'last_name',
@@ -56,6 +63,7 @@ class CustomerProfileSerializer(UserProfileSerializer):
     class Meta:
         model = UserProfile
         fields = [
+            'user',
             'username',
             'first_name',
             'last_name',
