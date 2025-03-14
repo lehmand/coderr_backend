@@ -1,5 +1,11 @@
 from rest_framework import serializers
 from profile_app.models import UserProfile
+from django.contrib.auth.models import User
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['pk', 'username', 'first_name', 'last_name']
 
 class UserProfileSerializer(serializers.ModelSerializer):
 
@@ -44,6 +50,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class BusinessProfileSerializer(UserProfileSerializer):
+
+    user = ProfileSerializer(read_only=True)
     class Meta:
         model = UserProfile
         fields = [
@@ -60,6 +68,8 @@ class BusinessProfileSerializer(UserProfileSerializer):
         ]
 
 class CustomerProfileSerializer(UserProfileSerializer):
+
+    user = ProfileSerializer(read_only=True)
     class Meta:
         model = UserProfile
         fields = [

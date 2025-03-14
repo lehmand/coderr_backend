@@ -1,5 +1,12 @@
 from rest_framework import serializers
 from reviews_app.models import Review
+from django.contrib.auth.models import User
+from profile_app.models import UserProfile
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('pk', 'username','first_name', 'last_name')
 
 
 class ReviewSerializer(serializers.ModelSerializer):
