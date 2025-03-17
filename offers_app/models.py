@@ -27,7 +27,7 @@ class OfferDetail(models.Model):
     revisions = models.PositiveIntegerField(default=0)
     delivery_time_in_days = models.PositiveIntegerField(default=0)
     price = models.PositiveIntegerField(default=100)
-    features = models.CharField(max_length=200)
+    features = models.JSONField(default=list)
     offer_type = models.CharField(max_length=200)
 
     def __str__(self):

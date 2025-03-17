@@ -5,6 +5,8 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from .serializers import RegistrationSerializer
 from rest_framework.permissions import AllowAny
+from profile_app.models import UserProfile
+from django.contrib.auth.models import User
 
 class RegistrationView(generics.CreateAPIView):
     serializer_class = RegistrationSerializer
@@ -25,8 +27,28 @@ class RegistrationView(generics.CreateAPIView):
     
 class CustomAuthToken(ObtainAuthToken):
     permission_classes = [AllowAny]
+
+    GUEST_USERS = {
+            "andrey": {
+                "password": "asdasd",
+                "email": "customer@example.com",
+                "type": "customer",
+            },
+            "kevin": {
+                "password": "asdasd24",
+                "email": "business@example.com",
+                "type": "business",
+            },
+        }
+    
     def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        
         serializer = self.get_serializer(data=request.data, context={'request': request})
+
+        if self.is_guest_user(username, password):
+            self.handle_guest_login(username, password)   
 
         if serializer.is_valid(raise_exception=True):
             user = serializer.validated_data['user']
@@ -38,3 +60,19 @@ class CustomAuthToken(ObtainAuthToken):
                 'user_id': user.id
             }, status=HTTP_202_ACCEPTED)
         return Response(serializer.erros, status=HTTP_400_BAD_REQUEST)
+    
+    def is_guest_user(self, username, password):
+            return (
+                username in self.GUEST_USERS
+                and password == self.GUEST_USERS[username]["password"]
+            )
+    
+    def handle_guest_login(self, username, password):
+        user_data = self.GUEST_USERS[username]
+        user, created = User.objects.get_or_create(
+            username=username, defaults={"email": user_data["email"]}
+        )
+        if created:
+            user.set_password(password)
+            user.save()
+            UserProfile.objects.create(user=user, type=user_data["type"])
