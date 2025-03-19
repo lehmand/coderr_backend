@@ -53,7 +53,7 @@ class SingleOrderSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
     def validate_status(self, value):
-        allowed_statuses = ['in_progress', 'complete', 'cancelled']
+        allowed_statuses = ['in_progress', 'completed', 'cancelled']
 
         if value not in allowed_statuses:
             return serializers.ValidationError(f'Status nicht erlaubt! Erlaubt: {allowed_statuses}')

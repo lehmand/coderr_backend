@@ -44,6 +44,19 @@ class SingleOrderView(generics.RetrieveUpdateDestroyAPIView):
         else:
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
+    
+    def partial_update(self, request, *args, **kwargs):
+        if 'status' in request.data:
+            status_value = request.data['status']
+            allowed_statuses = ['in_progress', 'completed', 'cancelled']
+
+            if status_value not in allowed_statuses:
+                return Response(
+                    {'error': f'Invalid status value. Allowed values are: {', '.join(allowed_statuses)}'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+        return super().partial_update(request, *args, **kwargs)
 
 
 class OrderCountView(APIView):

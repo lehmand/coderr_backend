@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework.response import Response
-from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_202_ACCEPTED
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_200_OK
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from .serializers import RegistrationSerializer
@@ -58,7 +58,7 @@ class CustomAuthToken(ObtainAuthToken):
                 'username': user.username,
                 'email': user.email,
                 'user_id': user.id
-            }, status=HTTP_202_ACCEPTED)
+            }, status=HTTP_200_OK)
         return Response(serializer.erros, status=HTTP_400_BAD_REQUEST)
     
     def is_guest_user(self, username, password):
